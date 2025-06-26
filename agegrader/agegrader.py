@@ -30,18 +30,12 @@ def parse_time(time_str, distance_km):
     """Parse a user entered time as time in seconds"""
     time_list = time_str.split(':')
 
-    if len(time_list) == 1:
-        if distance_km < 15:
-            h, m, s = 0, int(time_list[0]), 0
-        else:
-            h, m, s = int(time_list[0]), 0, 0
-    elif len(time_list) == 2:
-        if distance_km < 15:
-            h, m, s = 0, int(time_list[0]), int(time_list[1])
-        else:
-            h, m, s = int(time_list[0]), int(time_list[1]), 0
-    else:
+    if len(time_list) == 2:
+        h, m, s = 0, int(time_list[0]), int(time_list[1])
+    elif len(time_list) == 3:
         h, m, s = int(time_list[0]), int(time_list[1]), int(time_list[2])
+    else:
+        return None
 
     return h * 3600 + m * 60 + s
 
@@ -208,7 +202,7 @@ if __name__ == "__main__":
     result = grader.get_age_grade_by_category('5M', 'F', 'SF', (37*60)+7)
     print(f"Age grading (dn): {result}")
 
-    result = grader.get_age_grade_by_category('5M', 'F', 'F50', (41*60) + 43)
+    result = grader.get_age_grade_by_category('HM', 'F', 'F50', (41*60) + 43)
     print(f"Age grading (cw): {result}")
 
     # Test time formatting
