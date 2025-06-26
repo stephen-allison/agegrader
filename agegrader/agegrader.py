@@ -202,7 +202,7 @@ if __name__ == "__main__":
     result = grader.get_age_grade_by_category('5M', 'F', 'SF', (37*60)+7)
     print(f"Age grading (dn): {result}")
 
-    result = grader.get_age_grade_by_category('HM', 'F', 'F50', (41*60) + 43)
+    result = grader.get_age_grade_by_category('Marathon', 'F', 'F50', (41*60) + 43)
     print(f"Age grading (cw): {result}")
 
     # Test time formatting

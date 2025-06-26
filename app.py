@@ -34,7 +34,7 @@ edited_df = st.data_editor(
         "Category": st.column_config.TextColumn("Category"),
         "Distance": st.column_config.SelectboxColumn(
             "Distance",
-            options=["5K", "10K", "15K", "HM", "Half Marathon", "Marathon", "5M", "10M"],
+            options=st.session_state.age_grader.discipline_to_heading.keys() ,
             required=True
         ),
         "Time": st.column_config.TextColumn(
