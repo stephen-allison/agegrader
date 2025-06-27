@@ -60,7 +60,6 @@ if st.button("🧮 Calculate Age Grades", type="primary"):
     for idx, row in edited_df.iterrows():
         if pd.notna(row['Time']) and row['Time'] != '':
             time_seconds = parse_time(row['Time'])
-            print(row)
             if time_seconds > 0:
                 age_grade = st.session_state.age_grader.get_age_grade_by_category(
                     row['Distance'],
@@ -69,6 +68,7 @@ if st.button("🧮 Calculate Age Grades", type="primary"):
                 )
                 formatted_grade = f"{age_grade:.2f}%"
                 edited_df.at[idx, 'Age Grade'] = formatted_grade
+                print('Graded:', row['Name'], row['Category'], row['Distance'], row['Time'], formatted_grade)
 
     # Update session state
     st.session_state.results_df = edited_df
