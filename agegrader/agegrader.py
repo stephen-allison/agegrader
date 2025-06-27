@@ -144,36 +144,6 @@ class AgeGrader:
         gender = self.gender_from_category(category)
         return self.get_age_grade(discipline, gender, cat_age, time_seconds)
 
+
 def power_of_ten_grader():
     return AgeGrader(STANDARDS, POWER_OF_TEN_DISCIPLINE_MAP)
-
-# Example usage
-if __name__ == "__main__":
-    # Create age grader instance
-    grader = power_of_ten_grader()
-
-    # Example: 45-year-old male runs 10K in 40 minutes (2400 seconds)
-    result = grader.get_age_grade_by_category('5M', 'M45', (29 * 60) + 2)
-    print(f"Age grading (mk): {result}")
-
-    result = grader.get_age_grade_by_category('5M', 'M45', (37 * 60) + 34)
-    print(f"Age grading (cl): {result}")
-
-    result = grader.get_age_grade_by_category('5M', 'M50', 1628)
-    print(f"Age grading (am): {result}")
-
-    result = grader.get_age_grade_by_category('5M', 'M50', (40 * 60) + 4)
-    print(f"Age grading (sa): {result}")
-
-    result = grader.get_age_grade_by_category('5M', 'SF', (37 * 60) + 7)
-    print(f"Age grading (dn): {result}")
-
-    result = grader.get_age_grade_by_category('Marathon', 'F50', (41 * 60) + 43)
-    print(f"Age grading (cw): {result}")
-
-    # Test time formatting
-    print(f"2400 seconds formatted: {format_time(2400)}")
-
-    # Test time parsing
-    parsed = parse_time("40:00")
-    print(f"40:00 parsed to seconds: {parsed}")

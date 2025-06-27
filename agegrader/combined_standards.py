@@ -1,3 +1,18 @@
+'''
+Male and Female 'standards' for calculating age grading.
+
+Each distance has a list of values which are the 'standard' times for that distance
+at different ages.  The first element in the list is age 5, the next 6, 7 and so on up to 100.
+
+Extracted from MaleRoadStd15.xlsx and FemaleRoadStd15.xlsx, which bear the following:
+
+Compiled by Alan Jones, 3717 Wildwood Drive, Endwell, NY 13760, 607-786-5866
+AlanLJones@stny.rr.com, http://runscore.com/Alan/AgeGrade.html
+With lots of help from Rex Harvey
+January 2015
+Running Age-Grade Tables are licensed under a Creative Commons Attribution 4.0 International License: http://creativecommons.org/licenses/by/4.0/
+'''
+
 STANDARDS = {
   "M": {
     "5 km": [
