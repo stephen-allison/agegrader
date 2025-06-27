@@ -161,9 +161,9 @@ class AgeGrader:
         return -1
 
     def gender_from_category(self, category):
-        if category.startswith(('F', 'VF', 'VW', 'SF', 'JW', 'JF')):
+        if category.startswith(('F', 'VF', 'VW', 'SF', 'SW', 'JW', 'JF', 'JG')):
             return 'F'
-        elif category.startswith(('M', 'VM', 'SM', 'JM')):
+        elif category.startswith(('M', 'VM', 'SM', 'JM', 'JB')):
             return 'M'
 
     def get_age_grade(self, discipline, gender, age, time_seconds):

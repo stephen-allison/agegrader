@@ -88,7 +88,7 @@ with st.expander("ℹ️ How to use this app"):
     st.markdown("""
     1. **Enter results**: Add runner data in the table below
        - **Name**: Runner's name
-       - **Gender**: M or F
+       - **Category**: e.g. SF, SM, F30, M50, F45, M55 etc the age part goes in 5 year steps. JM and JF (or JW) plus age supported for juniors.
        - **Age**: Age in years (5-100)
        - **Distance**: Race distance (5K, 10K, HM, Marathon, etc.)
        - **Time**: Race time in MM:SS or H:MM:SS format (e.g., 42:30 or 1:25:30)
