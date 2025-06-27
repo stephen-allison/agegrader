@@ -108,3 +108,17 @@ with st.expander("ℹ️ How to use this app"):
 with st.expander("📏 Available Distances"):
     distances = st.session_state.age_grader.discipline_to_heading.keys()
     st.write(", ".join(sorted(distances)))
+
+with st.expander("🙏 Credits"):
+    st.markdown('''
+    **WAVA Standards**
+    Compiled by Alan Jones, 3717 Wildwood Drive, Endwell, NY 13760, 607-786-5866
+    
+    AlanLJones@stny.rr.com, http://runscore.com/Alan/AgeGrade.html
+    
+    With lots of help from Rex Harvey
+    
+    January 2015
+    
+    Running Age-Grade Tables are licensed under a Creative Commons Attribution 4.0 International License: http://creativecommons.org/licenses/by/4.0/
+    ''')
