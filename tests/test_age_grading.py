@@ -25,3 +25,17 @@ def test_age_grading(grader, category, time, expected_grade):
     assert grade == expected_grade
 
 
+AGE_AND_GENDER_RESULTS = [
+    (26, 'M', '5K', hms_to_s(m=20, s=0), 64.92),
+    (56, 'M', '5K', hms_to_s(m=22, s=0), 70.23),
+    (43, 'M', '10M', hms_to_s(h=1, m=10, s=7), 66.25),
+    (12, 'F', '5K', hms_to_s(m=21, s=56), 75.15),
+    (29, 'F', 'HM', hms_to_s(m=100, s=17), 65.02),
+    (48, 'F', 'Mar', hms_to_s(h=2, m=58), 84.38)
+]
+
+@pytest.mark.parametrize('age, gender, distance, time, expected_grade', AGE_AND_GENDER_RESULTS)
+def test_age_grading(grader, age, gender, distance, time, expected_grade):
+    grade = grader.get_age_grade(distance, gender, age, time)
+    assert grade == expected_grade
+

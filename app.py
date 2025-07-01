@@ -1,6 +1,12 @@
 import streamlit as st
 import pandas as pd
+from enum import Enum
 from agegrader.agegrader import power_of_ten_grader, parse_time
+
+class InputMode(Enum):
+    CATEGORY = "Category"
+    AGE_GENDER = "Age and Gender"
+
 
 st.set_page_config(
     page_title="Running Age Grader",
@@ -12,30 +18,63 @@ st.set_page_config(
 if 'age_grader' not in st.session_state:
     st.session_state.age_grader = power_of_ten_grader()
 
+if 'input_mode' not in st.session_state:
+    st.session_state.input_mode = InputMode.CATEGORY
+
 # Streamlit App
 st.title("🏃‍♂️ Running Age Grade Calculator")
 
 # Results input section
 st.subheader("1. Enter Race Results")
 
-# Sample data for the table
+# Sample data creation function
+def create_sample_data():
+    if st.session_state.input_mode == InputMode.CATEGORY:
+        st.session_state.results_df = pd.DataFrame({
+            'Name': ['John Smith', 'Jane Doe'],
+            'Category': ['SM', 'F40'],
+            'Distance': ['10K', '5K'],
+            'Time': ['42:30', '22:15'],
+            'Age Grade': ['', '']
+        })
+    else:
+        st.session_state.results_df = pd.DataFrame({
+            'Name': ['John Smith', 'Jane Doe'],
+            'Age': [26, 43],
+            'Gender': ['M', 'F'],
+            'Distance': ['10K', '5K'],
+            'Time': ['42:30', '22:15'],
+            'Age Grade': ['', '']
+        })
+
+# Initialize sample data if needed
 if 'results_df' not in st.session_state:
-    st.session_state.results_df = pd.DataFrame({
-        'Name': ['John Smith', 'Jane Doe'],
-        'Category': ['SM', 'F40'],
-        'Distance': ['10K', '5K'],
-        'Time': ['42:30', '22:15'],
-        'Age Grade': ['', '']
-    })
+    create_sample_data()
+
+
+def mode_changed():
+    if 'results_df' in st.session_state:
+        del st.session_state.results_df
+    # Force recreation of dataframe with correct columns
+    create_sample_data()
+
+st.write('**Enter results by Age and Gender or Category:**')
+col1, col2 = st.columns([1, 3])
+with col1:
+    input_mode = st.selectbox(
+        'Input Mode:',
+        options=[InputMode.CATEGORY, InputMode.AGE_GENDER],
+        format_func=lambda x: x.value,
+        key='input_mode',
+        on_change=mode_changed,
+        label_visibility='collapsed',
+    )
 
 # Data editor for results
 st.write("**Edit the table below** (you can add/remove rows and paste data):")
 
-edited_df = st.data_editor(
-    st.session_state.results_df,
-    num_rows="dynamic",
-    use_container_width=True,
-    column_config={
+if st.session_state.input_mode == InputMode.CATEGORY:
+    column_config = {
         "Name": st.column_config.TextColumn("Runner Name"),
         "Category": st.column_config.TextColumn("Category"),
         "Distance": st.column_config.SelectboxColumn(
@@ -52,6 +91,35 @@ edited_df = st.data_editor(
             disabled=True
         )
     }
+else:
+    column_config = {
+        "Name": st.column_config.TextColumn("Runner Name"),
+        "Age": st.column_config.NumberColumn("Age", min_value=5, max_value=100),
+        "Gender": st.column_config.SelectboxColumn(
+            'Gender',
+            options=['M', 'F'],
+            required=True
+        ),
+        "Distance": st.column_config.SelectboxColumn(
+            "Distance",
+            options=st.session_state.age_grader.discipline_to_heading.keys(),
+            required=True
+        ),
+        "Time": st.column_config.TextColumn(
+            "Time (MM:SS or H:MM:SS)",
+            help="Format: 42:30 or 1:25:30"
+        ),
+        "Age Grade": st.column_config.TextColumn(
+            "Age Grade %",
+            disabled=True
+        )
+    }
+
+edited_df = st.data_editor(
+    st.session_state.results_df,
+    num_rows="dynamic",
+    use_container_width=True,
+    column_config=column_config
 )
 
 # Calculate button
@@ -61,21 +129,33 @@ if st.button("🧮 Calculate Age Grades", type="primary"):
         if pd.notna(row['Time']) and row['Time'] != '':
             time_seconds = parse_time(row['Time'])
             if time_seconds > 0:
-                age_grade = st.session_state.age_grader.get_age_grade_by_category(
-                    row['Distance'],
-                    row['Category'],
-                    time_seconds
-                )
+                # Check which columns are available to determine mode
+                if 'Category' in row and pd.notna(row['Category']):
+                    age_grade = st.session_state.age_grader.get_age_grade_by_category(
+                        row['Distance'],
+                        row['Category'],
+                        time_seconds
+                    )
+                elif 'Age' in row and 'Gender' in row and pd.notna(row['Age']) and pd.notna(row['Gender']):
+                    age_grade = st.session_state.age_grader.get_age_grade(
+                        row['Distance'],
+                        row['Gender'],
+                        int(row['Age']),
+                        time_seconds
+                    )
+                else:
+                    continue  # Skip row if missing required data
+                
                 formatted_grade = f"{age_grade:.2f}%"
                 edited_df.at[idx, 'Age Grade'] = formatted_grade
-                print('Graded:', row['Name'], row['Category'], row['Distance'], row['Time'], formatted_grade)
+                print('Graded:', row['Name'], row['Distance'], row['Time'], formatted_grade)
 
     # Update session state
     st.session_state.results_df = edited_df
 
     # Display results
     st.subheader("📊 Results with Age Grades")
-    st.dataframe(edited_df, use_container_width=True)
+    st.dataframe(edited_df, use_container_width=True, hide_index=True)
 
     # Download results
     csv = edited_df.to_csv(index=False)
@@ -96,7 +176,6 @@ with st.expander("ℹ️ How to use this app"):
        - **Time**: Race time in MM:SS or H:MM:SS format (e.g., 42:30 or 1:25:30)
     2. **Calculate**: Click the button to calculate age grades
     3. **Download**: Export results as CSV
-
     **Tips:**
     - You can copy/paste data from spreadsheets directly into the table
     - Age grade shows how your performance compares to world standards for your age/gender

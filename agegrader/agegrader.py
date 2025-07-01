@@ -73,7 +73,7 @@ class AgeGrader:
         # Map from discipline names to headings from standards spreadsheet
         self.discipline_to_heading = discipline_to_heading_map
 
-    def get_heading(self, discipline):
+    def _get_heading(self, discipline):
         """Get the spreadsheet column heading for a discipline"""
         # Remove suffixes
         discipline = re.sub(r'NAD$', '', discipline)
@@ -84,13 +84,9 @@ class AgeGrader:
             return discipline
         return self.discipline_to_heading.get(discipline)
 
-    def supports_discipline(self, discipline):
-        """Check if the discipline is supported"""
-        return self.get_heading(discipline) is not False
-
-    def get_standard(self, discipline, gender, age):
+    def _get_standard(self, discipline, gender, age):
         """Get the age graded standard in seconds"""
-        heading = self.get_heading(discipline)
+        heading = self._get_heading(discipline)
 
         if not heading:
             return False
@@ -107,7 +103,7 @@ class AgeGrader:
         except KeyError:
             return False
 
-    def age_from_category(self, category):
+    def _age_from_category(self, category):
         """Extract age from category string like 'M45' or 'Senior'"""
         if 'Senior' in category or 'SM' in category or 'SF' in category:
             return 21
@@ -124,15 +120,16 @@ class AgeGrader:
 
         return -1
 
-    def gender_from_category(self, category):
+    def _gender_from_category(self, category):
         if category.startswith(('F', 'VF', 'VW', 'SF', 'SW', 'JW', 'JF', 'JG')):
             return 'F'
         elif category.startswith(('M', 'VM', 'SM', 'JM', 'JB')):
             return 'M'
+        return None
 
     def get_age_grade(self, discipline, gender, age, time_seconds):
         """Calculate age grading percentage"""
-        standard = self.get_standard(discipline, gender, age)
+        standard = self._get_standard(discipline, gender, age)
         if standard is False:
             return ""
 
@@ -140,8 +137,8 @@ class AgeGrader:
         return round(percentage, 2)
 
     def get_age_grade_by_category(self, discipline, category, time_seconds):
-        cat_age = self.age_from_category(category)
-        gender = self.gender_from_category(category)
+        cat_age = self._age_from_category(category)
+        gender = self._gender_from_category(category)
         return self.get_age_grade(discipline, gender, cat_age, time_seconds)
 
 
