@@ -169,19 +169,24 @@ if st.button("🧮 Calculate Age Grades", type="primary"):
 # Instructions
 with st.expander("ℹ️ How to use this app"):
     st.markdown("""
-    1. **Enter results**: Add runner data in the table below
-       - **Name**: Runner's name
-       - **Category**: e.g. SF, SM, F30, M50, F45, M55 etc the age part goes in 5 year steps. JM and JF (or JW) plus age supported for juniors.
-       - **Distance**: Race distance (5K, 10K, HM, Marathon, etc.)
-       - **Time**: Race time in MM:SS or H:MM:SS format (e.g., 42:30 or 1:25:30)
-    2. **Calculate**: Click the button to calculate age grades
-    3. **Download**: Export results as CSV
-    **Tips:**
-    - You can copy/paste data from spreadsheets directly into the table
-    - Age grade shows how your performance compares to world standards for your age/gender
-    - Higher percentages = better relative performance
-    - Uses 2015 WMA (World Masters Athletics) age grading standards
-    """)
+        1. **Choose input mode**: Select "Age and Gender" (separate columns) or "Category" (combined like M45, F30)
+        2. **Enter results**: Add runner data in the table below
+           - **Name**: Runner's name
+           - **Age/Gender or Category**: 
+             - Age and Gender mode: Separate age (5-100) and gender (M/F) columns
+             - Category mode: Combined format like M45, F30, Senior, etc.
+           - **Distance**: Race distance (5K, 10K, HM, Marathon, etc.)
+           - **Time**: Race time in MM:SS or H:MM:SS format (e.g., 42:30 or 1:25:30)
+        3. **Calculate**: Click the button to calculate age grades
+        4. **Download**: Export results as CSV
+
+        **Tips:**
+        - You can copy/paste data from spreadsheets directly into the table
+        - Switching between modes will reset the table with sample data
+        - Age grade shows how your performance compares to world standards for your age/gender
+        - Higher percentages = better relative performance
+        - Uses 2015 WMA (World Masters Athletics) age grading standards
+        """)
 
 # Show available distances
 with st.expander("📏 Available Distances"):
