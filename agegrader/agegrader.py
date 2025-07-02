@@ -142,5 +142,5 @@ class AgeGrader:
         return self.get_age_grade(discipline, gender, cat_age, time_seconds)
 
 
-def power_of_ten_grader():
-    return AgeGrader(STANDARDS, POWER_OF_TEN_DISCIPLINE_MAP)
+def power_of_ten_grader(year=2015):
+    return AgeGrader(STANDARDS[str(year)], POWER_OF_TEN_DISCIPLINE_MAP)
